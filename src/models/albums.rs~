@@ -1,0 +1,7 @@
+pub struct albums{
+	id_album: i32,
+	path: String,
+	name: String,
+	year: i32,
+}
+
