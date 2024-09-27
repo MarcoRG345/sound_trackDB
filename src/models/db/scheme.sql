@@ -8,7 +8,7 @@ INSERT INTO types VALUES(1,'Group');
 INSERT INTO types VALUES(2,'Unknown');
 
 CREATE TABLE performers (
-    id_performer  INTEGER PRIMARY KEY,
+    id_performer  INTEGER PRIMARY KEY AUTOINCREMENT,
     id_type       INTEGER,
     name          TEXT,
     FOREIGN KEY   (id_type) REFERENCES types(id_type)
@@ -38,7 +38,7 @@ CREATE TABLE in_group (
 );
 
 CREATE TABLE albums (
-    id_album      INTEGER PRIMARY KEY,
+    id_album      INTEGER PRIMARY KEY AUTOINCREMENT,
     path          TEXT,
     name          TEXT,
     year          INTEGER

@@ -6,9 +6,10 @@ pub struct Albums{
 	year: u32,
 }
 impl Albums {
-	pub fn new(id_album: i32, path: String, name: String, year:u32) -> Self{
+	pub fn new(path: String, name: String, year:u32) -> Self{
+		let empty_id = 0;
 		Albums{
-			id_album,
+			id_album: empty_id,
 			path,
 			name,
 			year,

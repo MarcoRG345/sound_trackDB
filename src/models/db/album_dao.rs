@@ -18,7 +18,7 @@ impl Album_dao{
 	pub fn create_album_table(&self) -> Result<()>{
 		self.connection.execute(
 			"CREATE TABLE IF NOT EXISTS albums (
-				id_albums INTEGER PRIMARY KEY,
+				id_albums INTEGER PRIMARY KEY AUTOINCREMENT,
 				path TEXT,
 				name TEXT,
 				year INTEGER
@@ -28,22 +28,27 @@ impl Album_dao{
 		Ok(())
 	}
 	
-	pub fn add_album(&self, album: &Albums) -> Result<()>{
+	pub fn add_album(&self, album: &Albums) -> Result<(), >{
 		self.connection.execute(
-			"INSERT INTO albums (id_albums, path, name, year) VALUES (?1, ?2, ?3, ?4)",
-			(album.get_id(), album.get_path(), album.get_name(), album.get_year()),
+			"INSERT INTO albums (path, name, year) VALUES (?1, ?2, ?3)",
+			(album.get_path(), album.get_name(), album.get_year()),
 		)?;
 		Ok(())
 	}
+	
 	pub fn get_albums(&self) -> Result<Vec<Albums>>{
 		let mut stmut = self.connection.prepare("SELECT id_albums, path, name, year FROM albums")?;
 		let albums_rows = stmut.query_map([], |row| {
-			Ok(Albums::new(row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?))
+			let album_id = row.get(0)?;
+			let mut album = Albums::new(row.get(1)?, row.get(2)?, row.get(3)?);
+			album.set_id_album(album_id);
+			Ok(album)
 		})?;
 		let mut album_iter = Vec::new();
 		for album in albums_rows{
-			let album = album.unwrap();
-			album_iter.push(album);
+			if let Ok(album_result) = album {
+				album_iter.push(album_result);
+			}
 		}
 		Ok(album_iter)
 	}
@@ -52,25 +57,30 @@ impl Album_dao{
 #[cfg(test)]
 pub mod tests{
 	use super::*;
-	 use std::env;
+	use std::fs;
+	use std::io::Error;
+	
+	fn delete_test_file(file_path: &str) -> Result<(), Error> {
+    	fs::remove_file(file_path)?;
+    	Ok(())
+	}
 	
 	#[test]
 	fn test_connection() -> Result<()>{
 		let album_dao = Album_dao::new()?;
-		let album = Albums::new(1, "not path".to_string(), "name".to_string(), 2004);
+		let album = Albums::new("not path".to_string(), "name".to_string(), 2004);
 		album_dao.create_album_table();
 		album_dao.add_album(&album);
 		let album_iter = album_dao.get_albums().expect("is empty");
 		assert_eq!(album_iter.is_empty(), false);
 		for i in 0..1000{
-			let album = Albums::new(i, "not path".to_string(), "name".to_string(), ((i + 100)).try_into().unwrap());
+			let album = Albums::new("not path".to_string(), "name".to_string(), ((i + 100)).try_into().unwrap());
 			album_dao.create_album_table();
 			album_dao.add_album(&album);
 		}
 		let new_alb_iter = album_dao.get_albums().expect("is empty");
-		assert_eq!(new_alb_iter.len(), 1000);
-		let current_dir = env::current_dir().unwrap();
-    	println!("Current directory: {:?}", current_dir); 
+		assert_eq!(new_alb_iter.len(), 1001);
+		delete_test_file("src/models/db/music.db");
 		Ok(())
 	}
 }

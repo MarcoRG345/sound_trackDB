@@ -1,0 +1,14 @@
+use rusqlite::{params, Connection, Result};
+use crate::models::performer::Performer;
+
+pub struct Performer_dao{
+	connection: Connection,
+}
+impl Performer_dao{
+	pub fn new() -> Result<Self>{
+		let connection = Connection::open("src/models/db/music.db").expect("failed open db");
+		Ok(Performer_dao{
+			connection,
+		})
+	}
+}
