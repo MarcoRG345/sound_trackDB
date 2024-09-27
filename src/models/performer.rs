@@ -2,7 +2,7 @@ use crate::models::types::Types;
 
 #[derive(Debug)]
 pub struct Performer{
-	id_performer: u32,
+	id_performer: i32,
 	name: String,
 	types: Types,
 	
@@ -16,7 +16,7 @@ impl Performer{
 			types,
 		}
 	}
-	pub fn get_id_perf(&self) -> &u32{
+	pub fn get_id_perf(&self) -> &i32{
 		&self.id_performer
 	}
 	pub fn get_name(&self) -> &String{

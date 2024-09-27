@@ -1,0 +1,6 @@
+use crate::models::types::Types;
+use rusqlite::{params, Connection, Result};
+pub struct TypesDao{
+	
+}
+impl TypesDao{}
