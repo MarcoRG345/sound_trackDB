@@ -5,8 +5,13 @@ pub struct Types{
 }
 impl Types{
 	pub fn new(description: String) -> Self{
+		let id_type = match description.as_str() {
+			"Person" => 0,
+			"Group" => 1,
+			_ => 2,
+		};
 		Types{
-			id_type: 0,
+			id_type,
 			description,
 		}
 	}
