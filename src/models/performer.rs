@@ -25,4 +25,7 @@ impl Performer{
 	pub fn get_type(&self) -> &Types{
 		&self.types
 	}
+	pub fn set_id(&mut self, id_performer: i32){
+		self.id_performer = id_performer;
+	}
 }

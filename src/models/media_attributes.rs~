@@ -1,0 +1,4 @@
+pub struct MediaAttributes {
+	path: String,
+	year: i32,
+}

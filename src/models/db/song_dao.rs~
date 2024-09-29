@@ -1,0 +1,8 @@
+use std::sync::{Arc, Mutex};
+use rusqlite::{params, Connection, Result};
+use crate::models::performer::Performer;
+use crate::models::media_attributes::MediaAttributes;
+
+pub struct SongDao{
+	connection:
+}

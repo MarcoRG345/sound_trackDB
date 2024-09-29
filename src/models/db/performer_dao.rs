@@ -28,16 +28,16 @@ impl PerformerDao{
 		)?;
 		Ok(())
 	}
-	
 	pub fn get_performers(&self) -> Result<Vec<Performer>>{
 		let connection_key = self.connection.lock().unwrap();
 		let mut stmut = connection_key.prepare(
-			"SELECT name, description FROM performers JOIN types ON 
+			"SELECT id_performer, name, description FROM performers JOIN types ON 
 			performers.id_type = types.id_type
 			")?;
 		let perform_rows = stmut.query_map([], |row| {
-			let types = Types::new(row.get(1)?);
-			let performer = Performer::new(row.get(0)?, types);
+			let types = Types::new(row.get(2)?);
+			let mut performer = Performer::new(row.get(1)?, types);
+			performer.set_id(row.get(0)?);
 			Ok(performer)
 		})?;
 		let mut perform_iter = Vec::new();
