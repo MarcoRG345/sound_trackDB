@@ -6,3 +6,4 @@ edition = "2021"
 [dependencies]
 gtk = { git = "https://github.com/gtk-rs/gtk4-rs.git", package = "gtk4" }
 rusqlite = "0.32.1"
+id3 ="1.14.0"
