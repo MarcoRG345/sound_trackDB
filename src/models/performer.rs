@@ -2,7 +2,7 @@ use crate::models::types::Types;
 
 #[derive(Debug)]
 pub struct Performer{
-	id_performer: i32,
+	id_performer: i64,
 	name: String,
 	types: Types,
 	
@@ -16,7 +16,7 @@ impl Performer{
 			types,
 		}
 	}
-	pub fn get_id_perf(&self) -> &i32{
+	pub fn get_id_perf(&self) -> &i64{
 		&self.id_performer
 	}
 	pub fn get_name(&self) -> &String{
@@ -25,7 +25,7 @@ impl Performer{
 	pub fn get_type(&self) -> &Types{
 		&self.types
 	}
-	pub fn set_id(&mut self, id_performer: i32){
+	pub fn set_id(&mut self, id_performer: i64){
 		self.id_performer = id_performer;
 	}
 }

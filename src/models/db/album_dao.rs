@@ -28,12 +28,13 @@ impl Album_dao{
 		Ok(())
 	}
 	
-	pub fn add_album(&self, album: &Albums) -> Result<(), >{
-		self.connection.lock().unwrap().execute(
+	pub fn add_album(&self, album: &Albums) -> Result<i64>{
+		let connection_key = self.connection.lock().unwrap();
+		connection_key.execute(
 			"INSERT INTO albums (path, name, year) VALUES (?1, ?2, ?3)",
 			(album.get_path(), album.get_name(), album.get_year()),
 		)?;
-		Ok(())
+		Ok(connection_key.last_insert_rowid())
 	}
 	
 	pub fn get_albums(&self) -> Result<Vec<Albums>>{

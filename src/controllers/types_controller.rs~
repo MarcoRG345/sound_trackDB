@@ -1,0 +1,16 @@
+use crate::models::db::types_dao::TypesDao;
+use rusqlite::{params, Connection, Result};
+use std::sync::{Arc, Mutex};
+
+pub struct TypeController{
+	typeDao: TypesDao,
+}
+
+impl TypeController{
+	pub fn new (connection: Arc<Mutex<Connection>>) -> Self{
+		let typeDao = TypesDao::new(connection);
+		TypeController{
+			typeDao,
+		}
+	}
+}

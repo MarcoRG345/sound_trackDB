@@ -1,0 +1,19 @@
+use crate::models::db::performer_dao::PerformerDao;
+use crate::models::performer::Performer;
+
+pub struct PerformerController{
+	performerDao: PerformerDao,
+	
+}
+impl PerformerController{
+	pub fn new(connection: Arc<Mutex<Connection>>) -> Self{
+		let performerDao = PerformerDao::new(connection);
+		PerformerController{
+			performerDao,
+		}
+	}
+	pub fn add_perform(&self, performer: &Performer){
+		self.performerDao.create_perform_table();
+		self.add_perform(performer);
+	}
+}

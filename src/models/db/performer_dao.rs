@@ -22,11 +22,12 @@ impl PerformerDao{
 			)",(),)?;
 		Ok(())
 	}
-	pub fn add_perform(&self, performer: &Performer) -> Result<()>{
-		self.connection.lock().unwrap().execute(
+	pub fn add_perform(&self, performer: &Performer) -> Result<i64>{
+		let connection_key = self.connection.lock().unwrap();
+		connection_key.execute(
 			"INSERT INTO performers (id_type, name) VALUES (?1 ,?2)", (performer.get_type().get_id_type(), performer.get_name()),
 		)?;
-		Ok(())
+		Ok(connection_key.last_insert_rowid())
 	}
 	pub fn get_performers(&self) -> Result<Vec<Performer>>{
 		let connection_key = self.connection.lock().unwrap();

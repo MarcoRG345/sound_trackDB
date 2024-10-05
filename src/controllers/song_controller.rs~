@@ -1,0 +1,11 @@
+use crate::models::db::performer_dao::PerformerDao;
+use crate::models::song::Song;
+use rusqlite::{params, Connection, Result};
+use std::sync::{Arc, Mutex};
+
+pub struct SongController{
+	
+}
+impl SongController{
+	
+}

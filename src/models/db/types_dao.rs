@@ -23,7 +23,7 @@ impl TypesDao{
 		self.connection.lock().unwrap().execute_batch(
 			"INSERT INTO types VALUES (0, 'Person');
 			 INSERT INTO types VALUES (1, 'Group');
-			 INSERT INTO types VALUES (3, 'Unknown');",
+			 INSERT INTO types VALUES (2, 'Unknown');",
 		)?;
 		Ok(())
 	}

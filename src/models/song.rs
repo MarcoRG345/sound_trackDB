@@ -4,7 +4,7 @@ use crate::models::media_attributes::MediaAttributes;
 
 #[derive(Debug)]
 pub struct Song{
-	id_song: i32,
+	id_song: i64,
 	performer: Performer,
 	album: Albums,
 	tittle: String,

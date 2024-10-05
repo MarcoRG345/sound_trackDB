@@ -33,13 +33,14 @@ impl SongDao {
 			,(),)?;
 		Ok(())
 	}
-	pub fn add_song(&self, song: &Song) -> Result<()>{		
-		self.connection.lock().unwrap().execute(
+	pub fn add_song(&self, song: &Song) -> Result<i64>{
+		let connection_key = self.connection.lock().unwrap();
+		connection_key.execute(
 			"INSERT INTO rolas (id_performer, id_albums, path, title, track, year, genre) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
 			(song.get_performer().get_id_perf(), song.get_album().get_id(), song.get_access().get_path(), song.get_tittle(), song.get_track(),
 			song.get_access().get_year(), song.get_genre()),
 		)?;
-		Ok(())
+		Ok(connection_key.last_insert_rowid())
 	}
 	pub fn get_all_songs(&self) -> Result<Vec<Song>>{
 		let connection_key = self.connection.lock().unwrap();
@@ -55,7 +56,6 @@ impl SongDao {
 			JOIN types ON performers.id_type = types.id_type"
 		)?;
 		let song_rows = stmut.query_map([], |row| {
-			println!("hola que hace");
 			let types = Types::new(row.get::<_, String>("types_description")?);
 			let performer = Performer::new(row.get::<_, String>("performers_name")?, types);
 			let album = Albums::new(row.get::<_, String>("albums_path")?, row.get::<_, String>("albums_name")?, row.get::<_, u32>("albums_year")?);
