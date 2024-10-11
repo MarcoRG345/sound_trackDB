@@ -17,4 +17,10 @@ impl SongController{
 		self.songDao.create_song_table();
 		self.songDao.add_song(song);
 	}
+	pub fn get_last_song(&self) -> Song{
+		match self.songDao.get_last_song(){
+			Ok(song) => song,
+			_=> todo!(),
+		}
+	}
 }

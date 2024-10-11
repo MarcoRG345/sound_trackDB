@@ -43,4 +43,10 @@ impl Song{
 	pub fn get_genre(&self) -> &String{
 		&self.genre
 	}
+	pub fn set_id(&mut self, id_song: i64){
+		self.id_song = id_song;
+	}
+	pub fn get_id(&self) -> &i64{
+		&self.id_song
+	}
 }

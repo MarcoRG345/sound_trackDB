@@ -15,15 +15,17 @@ use std::collections::HashMap;
 
 pub struct Miner{
 	db_connection: DBConnection,
+	last_songs: Vec<Song>,
 	metadata: HashMap<String, String>,
 }
 
 impl Miner{
-	pub fn new() -> Self{
+	pub fn new(db_connection: DBConnection) -> Self{
 		let mut metadata = HashMap::new();
-		let db_connection = DBConnection::establish("src/models/db/music.db").expect("failed");
+		let mut last_songs = Vec::new();
 		Miner{
 			db_connection,
+			last_songs,
 			metadata,
 		}
 	}
@@ -58,7 +60,7 @@ impl Miner{
 		Ok(())	
 	}
 
-	pub fn insert_database(&self, path: &str){
+	pub fn insert_database(&mut self, path: &str){
 		let song_controller = SongController::new(self.db_connection.get_connection());
 		let album_controller = AlbumController::new(self.db_connection.get_connection());
 		let performer_controller = PerformerController::new(self.db_connection.get_connection());
@@ -70,7 +72,7 @@ impl Miner{
 		
 		let mut album = Albums::new(path.to_string(),
 								self.metadata.get("album").unwrap_or(&"Unknown".to_string()).to_string(),
-								self.metadata.get("year").unwrap().parse().unwrap());
+								self.metadata.get("year").map(|s| s.parse::<u32>().unwrap_or(0)).unwrap_or(0));
 		let id_album = album_controller.add_album(&album);
 		album.set_id_album(id_album);
 		
@@ -78,10 +80,11 @@ impl Miner{
 		let id_perform = performer_controller.add_perform(&performer);
 		performer.set_id(id_perform);
 		
-		let access =  MediaAttributes::new(path.to_string(), self.metadata.get("year").unwrap().parse().unwrap());
+		let access =  MediaAttributes::new(path.to_string(), self.metadata.get("year").map(|s| s.parse::<u32>().unwrap_or(0)).unwrap_or(0));
 		let song = Song::new(performer, album, self.metadata.get("title").unwrap_or(&"Unknown".to_string()).to_string(),
 							 access, 3, self.metadata.get("genre").unwrap_or(&"Unknown".to_string()).to_string());
 		song_controller.add_song(&song);
+		self.last_songs.push(song_controller.get_last_song());
 	}
 	
 	pub fn read_directory(&mut self, path: &str) -> std::io::Result<()>{
@@ -103,17 +106,27 @@ impl Miner{
 		}
 		Ok(())
 	}
-	
+
+	pub fn prepare_data_returned(&self) -> Song{
+		let song_controller = SongController::new(self.db_connection.get_connection());
+		 song_controller.get_last_song()
+	}
+	pub fn get_last_songs(&mut self) -> &mut Vec<Song>{
+		&mut self.last_songs
+	}
 }
 
 #[cfg(test)]
 mod tests{
 	use super::*;
+	use rusqlite::{params, Connection, Result};
 	
 	#[test]
-	fn test_extract_id3(){
-		let mut miner = Miner::new();
+	fn test_extract_id3() -> Result<()>{
+		let db = DBConnection::establish("src/models/db/music.db")?;
+		let mut miner = Miner::new(db.clone());
 		let path = "/home/marco/Desktop/modelado/mi_album";
-		miner.read_directory(path);
+		//miner.read_directory(path);
+		Ok(())
 	}
 }

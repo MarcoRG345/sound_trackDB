@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.38.2 -->
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkWindow" id="mainWindow">
+    <property name="width-request">0</property>
+    <property name="height-request">0</property>
+    <property name="can-focus">False</property>
+    <property name="default-width">630</property>
+    <property name="default-height">300</property>
+    <child>
+      <object class="GtkFixed" id="fixed">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <child>
+          <object class="GtkEntry" id="entryButton">
+            <property name="width-request">100</property>
+            <property name="height-request">37</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="placeholder-text" translatable="yes">Search: </property>
+            <property name="input-hints">GTK_INPUT_HINT_WORD_COMPLETION | GTK_INPUT_HINT_NONE</property>
+            <signal name="activate" handler="on_entryButton_activate" swapped="no"/>
+            <signal name="changed" handler="on_entryButton_changed" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">433</property>
+            <property name="y">7</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="SearchLabel">
+            <property name="width-request">100</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Search:</property>
+            <attributes>
+              <attribute name="font-desc" value="Sans Bold 11"/>
+              <attribute name="foreground" value="#eded33333b3b"/>
+              <attribute name="background" value="#000000000000"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="x">346</property>
+            <property name="y">-10</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="DataBaseLabel">
+            <property name="width-request">100</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Database Songs</property>
+            <attributes>
+              <attribute name="font-desc" value="Sans Bold 12"/>
+              <attribute name="foreground" value="#eded33333b3b"/>
+              <attribute name="background" value="#000000000000"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="x">6</property>
+            <property name="y">48</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="CurrentSongLabel">
+            <property name="width-request">100</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Song-title Artist album</property>
+            <attributes>
+              <attribute name="font-desc" value="Sans Bold 17"/>
+              <attribute name="foreground" value="#eded33333b3b"/>
+              <attribute name="background" value="#000000000000"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="x">148</property>
+            <property name="y">236</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="PlayButton">
+            <property name="label" translatable="yes">button</property>
+            <property name="width-request">100</property>
+            <property name="height-request">57</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">10</property>
+            <property name="y">250</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="Edit">
+            <property name="label" translatable="yes">Edit</property>
+            <property name="width-request">100</property>
+            <property name="height-request">57</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_Edit_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">500</property>
+            <property name="y">250</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkFileChooserButton" id="FileChooserButton">
+            <property name="width-request">175</property>
+            <property name="height-request">37</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="action">select-folder</property>
+            <property name="title" translatable="yes"/>
+            <signal name="file-set" handler="on_FileChooserButton_file_set" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">8</property>
+            <property name="y">6</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="Apply">
+            <property name="label" translatable="yes">Apply Changes</property>
+            <property name="width-request">100</property>
+            <property name="height-request">37</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">191</property>
+            <property name="y">6</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow" id="ScrollWindow">
+            <property name="width-request">597</property>
+            <property name="height-request">140</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="shadow-type">in</property>
+            <child>
+              <object class="GtkViewport" id="ViewPort">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <child>
+                  <object class="GtkListBox" id="ListBox">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="x">8</property>
+            <property name="y">103</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <child type="titlebar">
+      <object class="GtkHeaderBar" id="headerBar">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="title" translatable="yes">Music Mantainer</property>
+        <property name="subtitle" translatable="yes">Mine all music information</property>
+        <property name="show-close-button">True</property>
+      </object>
+    </child>
+  </object>
+</interface>

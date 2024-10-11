@@ -42,6 +42,38 @@ impl SongDao {
 		)?;
 		Ok(connection_key.last_insert_rowid())
 	}
+	pub fn get_last_song(&self) -> Result<Song>{
+		let connection_key = self.connection.lock().unwrap();
+		let mut stmut = connection_key.prepare(
+			"SELECT *, 
+				albums.name AS albums_name, 
+				albums.path AS albums_path, 
+				albums.year AS albums_year, 
+				performers.name AS performers_name, 
+				types.description AS  types_description FROM rolas
+			JOIN albums ON rolas.id_albums = albums.id_albums
+			JOIN performers ON rolas.id_performer = performers.id_performer
+			JOIN types ON performers.id_type = types.id_type
+			WHERE id_rola=(SELECT max(id_rola) FROM rolas)"
+		)?;
+		let song_rows = stmut.query_map([], |row| {
+			let types = Types::new(row.get::<_, String>("types_description")?);
+			let performer = Performer::new(row.get::<_, String>("performers_name")?, types);
+			let album = Albums::new(row.get::<_, String>("albums_path")?, row.get::<_, String>("albums_name")?, row.get::<_, u32>("albums_year")?);
+			let access = MediaAttributes::new(row.get::<_, String>("path")?, row.get::<_, u32>("year")?);
+			let mut song = Song::new(performer, album, row.get::<_, String>("title")?, access, row.get::<_, i32>("track")?, row.get::<_, String>("genre")?);
+			song.set_id(row.get::<_, i64>("id_rola")?);
+			Ok((song))
+		})?;
+		let mut songs_iter = Vec::new();
+		for song in song_rows {
+			if let Ok(song_) = song{
+				songs_iter.push(song_);	
+			}
+		}
+		let song = match songs_iter.pop() { Some(song_) => song_, _=> todo!(),};
+		Ok(song)
+	}
 	pub fn get_all_songs(&self) -> Result<Vec<Song>>{
 		let connection_key = self.connection.lock().unwrap();
 		let mut stmut = connection_key.prepare(
