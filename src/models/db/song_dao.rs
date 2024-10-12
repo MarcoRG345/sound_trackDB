@@ -104,6 +104,40 @@ impl SongDao {
 		}
 		Ok(songs_iter)
 	}
+	pub fn return_query(&self,condition_value: &String) -> Result<Vec<Song>>{
+		let connection_key = self.connection.lock().unwrap();
+		let query = String::from(
+			"SELECT *, 
+				albums.name AS albums_name, 
+				albums.path AS albums_path, 
+				albums.year AS albums_year, 
+				performers.name AS performers_name, 
+				types.description AS  types_description FROM rolas
+			JOIN albums ON rolas.id_albums = albums.id_albums
+			JOIN performers ON rolas.id_performer = performers.id_performer
+			JOIN types ON performers.id_type = types.id_type
+			WHERE rolas.title = ?1
+			OR performers.name = ?1
+			OR albums.name = ?1
+			OR rolas.genre = ?1");
+		let mut stmut = connection_key.prepare(&query)?;
+		let songs_rows = stmut.query_map(params![condition_value], |row| {
+			let types = Types::new(row.get::<_, String>("types_description")?);
+			let performer = Performer::new(row.get::<_, String>("performers_name")?, types);
+			let album = Albums::new(row.get::<_, String>("albums_path")?, row.get::<_, String>("albums_name")?, row.get::<_, u32>("albums_year")?);
+			let access = MediaAttributes::new(row.get::<_, String>("path")?, row.get::<_, u32>("year")?);
+			let mut song = Song::new(performer, album, row.get::<_, String>("title")?, access, row.get::<_, i32>("track")?, row.get::<_, String>("genre")?);
+			song.set_id(row.get::<_, i64>("id_rola")?);
+			Ok((song))
+		})?;
+		let mut songs_iter = Vec::new();
+		for song_result in songs_rows {
+			if let Ok(song_) = song_result{
+				songs_iter.push(song_);	
+			}
+		}
+		Ok(songs_iter)
+	}
 }
 
 #[cfg(test)]
@@ -147,8 +181,16 @@ mod tests {
 		let song_dao = SongDao::new(db.get_connection());
 		song_dao.create_song_table();
 		song_dao.add_song(&song);
-
 		let songs_iter = song_dao.get_all_songs()?;
+		let songs_it = song_dao.return_query(&"jojojoj".to_string())?;
+		println!("{:?}", songs_it);
+		for song in songs_it{
+			
+    	   	println!("ID: {}", song.get_id());
+    	   	println!("Título: {}", song.get_tittle());
+    	   	println!("Intérprete: {}", song.get_performer().get_name());
+   		    println!("Álbum: {}", song.get_album().get_name());
+		}
 		assert_eq!(songs_iter.len(), 1);
 		
 		delete_test_file("src/models/db/test_conn_song.db");

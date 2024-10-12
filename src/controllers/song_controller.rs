@@ -23,4 +23,12 @@ impl SongController{
 			_=> todo!(),
 		}
 	}
+	pub fn get_query_with(&self, condition_value: &String)-> Option<Vec<Song>>{
+		println!("entra aqui?");
+		if self.songDao.return_query(condition_value).unwrap().is_empty(){
+			println!("esta vacio");
+			return None;
+		}
+		Some(self.songDao.return_query(condition_value).unwrap())
+	}
 }

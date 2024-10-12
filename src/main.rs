@@ -31,6 +31,7 @@ fn main(){
 		let mut view = GUInterface::new(&builder, miner.clone());
 		view.connect_signals();
 		view.apply_changes();
+		view.connect_entry();
 		window.show_all();
 	});
 	app.run(&[]);

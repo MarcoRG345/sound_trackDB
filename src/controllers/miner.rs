@@ -107,9 +107,9 @@ impl Miner{
 		Ok(())
 	}
 
-	pub fn prepare_data_returned(&self) -> Song{
+	pub fn title_song_query(&self, condition_value: &String)-> Option<Vec<Song>>{
 		let song_controller = SongController::new(self.db_connection.get_connection());
-		 song_controller.get_last_song()
+		song_controller.get_query_with(condition_value)
 	}
 	pub fn get_last_songs(&mut self) -> &mut Vec<Song>{
 		&mut self.last_songs
