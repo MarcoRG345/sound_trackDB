@@ -1,6 +1,6 @@
 use crate::models::types::Types;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Performer{
 	id_performer: i64,
 	name: String,

@@ -92,7 +92,8 @@ impl SongDao {
 			let performer = Performer::new(row.get::<_, String>("performers_name")?, types);
 			let album = Albums::new(row.get::<_, String>("albums_path")?, row.get::<_, String>("albums_name")?, row.get::<_, u32>("albums_year")?);
 			let access = MediaAttributes::new(row.get::<_, String>("path")?, row.get::<_, u32>("year")?);
-			let song = Song::new(performer, album, row.get::<_, String>("title")?, access, row.get::<_, i32>("track")?, row.get::<_, String>("genre")?);
+			let mut song = Song::new(performer, album, row.get::<_, String>("title")?, access, row.get::<_, i32>("track")?, row.get::<_, String>("genre")?);
+			song.set_id(row.get::<_, i64>("id_rola")?);
 			Ok((song))
 		})?;
 

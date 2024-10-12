@@ -1,12 +1,9 @@
 use gtk::prelude::*;
-use gio::File;
-use gio::prelude::*;
 use gtk::{FileChooserButton, Entry, Box, Button, ListBox, ListBoxRow, Label, Builder, Window, Application, ApplicationWindow};
 use std::env;
 use crate::controllers::miner::Miner;
 use std::sync::{Arc, Mutex, MutexGuard};
-use std::sync::mpsc::{Sender, Receiver};
-use std::sync::mpsc;
+
 pub struct GUInterface{
 	miner: Arc<Mutex<Miner>>,
 	listBox: Arc<Mutex<ListBox>>,
@@ -58,7 +55,6 @@ impl GUInterface{
 	pub fn update_listbox(miner:Arc<Mutex<Miner>>, lbox:Arc<Mutex<ListBox>>){
 		let mut mine_key = miner.lock().unwrap();
 		
-		
 		let lbox_key = lbox.lock().unwrap();
 		for song in mine_key.get_last_songs().iter(){
 			let register_button = Button::new();
@@ -78,7 +74,10 @@ impl GUInterface{
 			box_container.pack_start(&album_label, true, true, 0);
 			box_container.pack_start(&year_label, true, true, 0);
 			box_container.pack_start(&genre_label, true, true, 0);
-		
+			let song_clone = song.clone(); 
+			register_button.connect_clicked(move |_| {
+				println!("{}", song_clone.get_tittle());	
+			});
 			register_button.add(&box_container);
 			lbox_key.add(&register_button);
 			
@@ -86,6 +85,7 @@ impl GUInterface{
 		lbox_key.show_all();
 		mine_key.get_last_songs().clear();
 	}
+	
 
 	pub fn connect_entry(&self){
 		let entry_clone = Arc::clone(&self.entry);
@@ -120,11 +120,6 @@ impl GUInterface{
 					let genre_label = Label::new(Some(song.get_genre()));
 
 		
-    	   			println!("ID: {}", song.get_id());
-    	    		println!("Título: {}", song.get_tittle());
-    	    		println!("Intérprete: {}", song.get_performer().get_name());
-   					println!("Álbum: {}", song.get_album().get_name());
-
 					box_container.pack_start(&id_label, true, true, 0);
 					box_container.pack_start(&title_label, true, true, 0);
 					box_container.pack_start(&performer_label, true, true, 0);
@@ -144,6 +139,39 @@ impl GUInterface{
 				lbox_key.show_all();
 				println!("NO hay nada que enseñar");
 			},
+		}
+	}
+	pub fn show_database_content(&self){
+		let miner_key = self.miner.lock().unwrap();
+		let songs_iter_option = miner_key.get_all_songs();
+		if let None = songs_iter_option{
+			return;
+		}
+		let songs_iter = songs_iter_option.unwrap();
+		let lbox_key = self.listBox.lock().unwrap();
+		if !songs_iter.is_empty(){
+			for song in songs_iter.iter(){
+				let register_button = Button::new();
+				let box_container = Box::new(gtk::Orientation::Horizontal, 5);
+				let id_label = Label::new(Some(&song.get_id().to_string()));
+				let title_label = Label::new(Some(song.get_tittle()));
+				let performer_label = Label::new(Some(song.get_performer().get_name()));
+				let album_label = Label::new(Some(song.get_album().get_name()));
+				let year_label = Label::new(Some(&song.get_album().get_year().to_string()));
+				let genre_label = Label::new(Some(song.get_genre()));
+
+		
+				box_container.pack_start(&id_label, true, true, 0);
+				box_container.pack_start(&title_label, true, true, 0);
+				box_container.pack_start(&performer_label, true, true, 0);
+				box_container.pack_start(&album_label, true, true, 0);
+				box_container.pack_start(&year_label, true, true, 0);
+				box_container.pack_start(&genre_label, true, true, 0);
+
+				register_button.add(&box_container);
+				lbox_key.add(&register_button);
+				lbox_key.show_all();
+			}
 		}
 	}
 }

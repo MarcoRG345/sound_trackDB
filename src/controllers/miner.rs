@@ -114,6 +114,10 @@ impl Miner{
 	pub fn get_last_songs(&mut self) -> &mut Vec<Song>{
 		&mut self.last_songs
 	}
+	pub fn get_all_songs(&self) -> Option<Vec<Song>>{
+		let song_controller = SongController::new(self.db_connection.get_connection());
+		song_controller.get_all_songs()
+	}
 }
 
 #[cfg(test)]

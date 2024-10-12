@@ -23,6 +23,12 @@ impl SongController{
 			_=> todo!(),
 		}
 	}
+	pub fn get_all_songs(&self) -> Option<Vec<Song>>{
+		match self.songDao.get_all_songs(){
+			Ok(songs_iter) => Some(songs_iter),
+			_=> None,
+		}
+	}
 	pub fn get_query_with(&self, condition_value: &String)-> Option<Vec<Song>>{
 		println!("entra aqui?");
 		if self.songDao.return_query(condition_value).unwrap().is_empty(){

@@ -2,7 +2,7 @@ use crate::models::performer::Performer;
 use crate::models::albums::Albums;
 use crate::models::media_attributes::MediaAttributes;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Song{
 	id_song: i64,
 	performer: Performer,
