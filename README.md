@@ -7,7 +7,7 @@ the logic data base.
 
 # Use
 Can use this software with two main ways:
- * Compile using cargo with `cargo build --release first`, then use `cargo run` it will be slow compiling and perhaps the computer will work hard,
+ * Compile using cargo with `cargo build` first, then use `cargo run` it will be slow compiling and perhaps the computer will work hard,
    but this it only the first time compiling. I DONT`t recommend use 'cargo clean' so easy, i has not found a way to reduce de compiling resources time yet.
  * Download the sound_tracDB in the "releases" section, descompress it and execute `./sound_trackDB` binary.
 
